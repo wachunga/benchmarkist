@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">= 6"
+  },
+  "private": true,
   "scripts": {
     "start": "node index.js",
     "lint": "eslint .",
@@ -12,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/wachunga/transact.git"
   },
-  "author": "David Hirtle <david.hirtle@yardi.com>",
+  "author": "David Hirtle <david.hirtle@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wachunga/transact/issues"
