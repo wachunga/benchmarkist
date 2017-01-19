@@ -4,7 +4,8 @@
         "sourceType": "script" // ES6 modules not supported in node... yet
     },
     "env": {
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "rules": {
         "indent": ["error", "tab"],
