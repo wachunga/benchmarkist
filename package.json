@@ -1,0 +1,23 @@
+{
+  "name": "transact",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wachunga/transact.git"
+  },
+  "author": "David Hirtle <david.hirtle@yardi.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wachunga/transact/issues"
+  },
+  "homepage": "https://github.com/wachunga/transact#readme",
+  "dependencies": {
+    "got": "6.7.1"
+  }
+}
