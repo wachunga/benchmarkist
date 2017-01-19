@@ -1,0 +1,20 @@
+{
+    "extends": "airbnb-base",
+    "parserOptions": {
+        "sourceType": "script" // ES6 modules not supported in node... yet
+    },
+    "env": {
+        "node": true
+    },
+    "rules": {
+        "indent": ["error", "tab"],
+        "no-tabs": "off",
+        "no-console": "off", // rule mostly intended for client side
+        "comma-dangle": "off", // I like this in principle
+        "no-use-before-define": ["error", "nofunc"], // I prefer readability of having sub-functions after functions
+        "max-len": "off", // long lines can be readable
+        "arrow-parens": ["error", "as-needed"],
+        "func-names": "off", // double-name properties of module.exports?
+        "arrow-body-style": "off" // some one statement lines are more readable as a block
+}
+}
