@@ -74,7 +74,7 @@ describe('transactionService', () => {
 			});
 		});
 
-		it('strips sanitized numbers for readability', () => {
+		it('optionally strips sanitized numbers for readability', () => {
 			nock(/.+/)
 				.get('/transactions/1.json')
 				.reply(200, {
@@ -96,6 +96,31 @@ describe('transactionService', () => {
 				assert.equal(transactions[0].Company, 'XAVIER ACADEMY');
 				assert.equal(transactions[1].Company, 'GROWINGCITY.COM BC');
 				assert.equal(transactions[2].Company, 'NESTERS MARKET # VANCOUVER BC');
+			});
+		});
+
+		it('optionally removes duplicates', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					totalCount: 3,
+					transactions: [
+						mockTransaction(123),
+						mockTransaction(456)
+					]
+				})
+				.get('/transactions/2.json')
+				.reply(200, {
+					totalCount: 3,
+					transactions: [
+						mockTransaction(123)
+					]
+				});
+
+			return transactionService.downloadAllTransactions({ dedupe: true }).then(transactions => {
+				assert.equal(transactions.length, 2);
+				assert.equal(transactions[0].Amount, '123');
+				assert.equal(transactions[1].Amount, '456');
 			});
 		});
 	});
