@@ -88,7 +88,7 @@ describe('transactionService', () => {
 				});
 
 			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '150');
+				assert.equal(balance, '150.00');
 			});
 		});
 
@@ -120,7 +120,7 @@ describe('transactionService', () => {
 				});
 
 			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '-50');
+				assert.equal(balance, '-50.00');
 			});
 		});
 
@@ -144,7 +144,7 @@ describe('transactionService', () => {
 				});
 
 			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '100');
+				assert.equal(balance, '100.00');
 			});
 		});
 
@@ -154,13 +154,13 @@ describe('transactionService', () => {
 				.reply(200, {
 					totalCount: 2,
 					transactions: [
-						mockTransaction('0.1'),
-						mockTransaction('0.2'),
+						mockTransaction('0.10'),
+						mockTransaction('0.20'),
 					]
 				});
 
 			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '0.3');
+				assert.equal(balance, '0.30');
 			});
 		});
 	});
