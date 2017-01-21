@@ -2,17 +2,10 @@
 
 const assert = require('assert');
 const nock = require('nock');
+const mockTransaction = require('./testHelper').mockTransaction;
 const transactionService = require('../lib/transactionService');
 
 describe('transactionService', () => {
-	function mockTransaction(amount) {
-		return {
-			Date: '2017-01-01',
-			Ledger: 'Business Meals & Entertainment Expense',
-			Amount: amount || '-123.45',
-			Company: 'WHOLE FOODS'
-		};
-	}
 	function mockTransactions(count) {
 		return new Array(count).fill(mockTransaction());
 	}
