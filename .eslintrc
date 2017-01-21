@@ -16,6 +16,7 @@
         "max-len": "off", // long lines can be readable
         "arrow-parens": ["error", "as-needed"],
         "func-names": "off", // double-name properties of module.exports?
-        "arrow-body-style": "off" // some one statement lines are more readable as a block
+        "arrow-body-style": "off", // some one statement lines are more readable as a block
+        "no-param-reassign": "off" // overly prescriptive
 }
 }

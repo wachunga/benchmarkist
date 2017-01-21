@@ -5,7 +5,7 @@ const nock = require('nock');
 const mockTransaction = require('./testHelper').mockTransaction;
 const expenseService = require('../lib/expenseService');
 
-describe('expenseService ', () => {
+describe('expenseService', () => {
 	it('listExpenseCategories handles no transactions', () => {
 		nock(/.+/)
 			.get('/transactions/1.json')
