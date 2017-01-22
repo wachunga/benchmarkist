@@ -67,6 +67,30 @@ describe('transactionService', () => {
 			});
 		});
 
+		it('sorts by descending date', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					totalCount: 3,
+					transactions: [
+						{ Date: '2016-12-12' },
+						{ Date: '2017-01-22' }
+					]
+				})
+				.get('/transactions/2.json')
+				.reply(200, {
+					totalCount: 3,
+					transactions: [
+						{ Date: '2017-01-12' }
+					]
+				});
+
+			return transactionService.downloadAllTransactions().then(transactions => {
+				const sortedDates = transactions.map(transaction => transaction.Date);
+				assert.deepEqual(sortedDates, ['2017-01-22', '2017-01-12', '2016-12-12']);
+			});
+		});
+
 		it('optionally strips sanitized numbers for readability', () => {
 			nock(/.+/)
 				.get('/transactions/1.json')
