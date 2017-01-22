@@ -19,6 +19,21 @@ describe('expenseService', () => {
 		});
 	});
 
+	it('listExpenseCategories totals are a formatted string', () => {
+		nock(/.+/)
+			.get('/transactions/1.json')
+			.reply(200, {
+				totalCount: 1,
+				transactions: [
+					mockTransaction('-100', 'Web Hosting'),
+				]
+			});
+
+		return expenseService.listExpenseCategories().then(categories => {
+			assert.strictEqual(categories[0].total, '-100.00');
+		});
+	});
+
 	it('listExpenseCategories groups by category', () => {
 		nock(/.+/)
 			.get('/transactions/1.json')
@@ -81,9 +96,27 @@ describe('expenseService', () => {
 			assert.equal(categories.length, 2);
 
 			const hosting = categories.find(category => category.categoryKey === 'Web Hosting');
-			assert.equal(hosting.total, '-200');
+			assert.equal(hosting.total, '-200.00');
 			const travel = categories.find(category => category.categoryKey === 'Travel Expense');
 			assert.equal(travel.total, '-300.75');
+		});
+	});
+
+	it('sorts largest expense first', () => {
+		nock(/.+/)
+			.get('/transactions/1.json')
+			.reply(200, {
+				totalCount: 3,
+				transactions: [
+					mockTransaction('-200.25', 'Travel Expense'),
+					mockTransaction('-100', 'Web Hosting'),
+					mockTransaction('-200', 'Equipment')
+				]
+			});
+
+		return expenseService.listExpenseCategories().then(categories => {
+			const sortedCategoryKeys = categories.map(category => category.categoryKey);
+			assert.deepEqual(sortedCategoryKeys, ['Travel Expense', 'Equipment', 'Web Hosting']);
 		});
 	});
 });
