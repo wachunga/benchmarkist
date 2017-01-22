@@ -7,5 +7,40 @@
 
 <body>
 	<h1>Transactions</h1>
+	<table class="sum-table">
+		<thead>
+			<th>Date</th>
+			<th>Company</th>
+			<th>Account</th>
+			<th></th> <!-- TODO: total balance -->
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+
+<script>
+	const tableBodyNode = document.querySelector('.sum-table tbody');
+	if (!fetch) {
+		alert('Your browser is currently unsupported');
+	}
+
+	fetchTransactions().then(function (result) {
+		addResults(result.transactions);
+	});
+
+	function fetchTransactions() {
+		return fetch('/a/1/transactions')
+			.then(function (response) {
+				return response.json();
+			});
+	}
+
+	function addResults(results) {
+		tableBodyNode.innerHTML = results.map(result => {
+			return `<tr><td>${result.Date}</td><td>${result.Company}</td><td>${result.Ledger}</td><td>${result.Amount}</td></tr>`;
+		}).join('\n');
+	}
+</script>
 </body>
 </html>
