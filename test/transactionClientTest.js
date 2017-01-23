@@ -66,6 +66,23 @@ describe('transactionClient', () => {
 				assert.equal(transactions.length, 0);
 			});
 		});
+
+		it('assigns Ledger as income when appropriate', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					totalCount: 2,
+					transactions: [
+						mockTransaction('500', ''),
+						mockTransaction('-500', ''),
+					]
+				});
+
+			return transactionClient.fetchAllTransactions().then(transactions => {
+				assert.equal(transactions[0].Ledger, 'Income');
+				assert.notEqual(transactions[1].Ledger, 'Income');
+			});
+		});
 	});
 });
 
