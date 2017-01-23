@@ -54,6 +54,37 @@ describe('transactionClient', () => {
 			});
 		});
 
+		it('gracefully handles missing total count', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					transactions: mockTransactions(3)
+				});
+
+			return transactionClient.fetchAllTransactions().then(transactions => {
+				// does not proceed to page 2
+				assert.equal(transactions.length, 3);
+			});
+		});
+
+		it('skips transactions with invalid amount', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					transactions: [
+						mockTransaction(null),
+						mockTransaction('foo'),
+						mockTransaction('Infinity'),
+						mockTransaction('123'),
+					]
+				});
+
+			return transactionClient.fetchAllTransactions().then(transactions => {
+				assert.equal(transactions.length, 1);
+				assert.equal(transactions[0].Amount, '123');
+			});
+		});
+
 		it('handles no transactions', () => {
 			nock(/.+/)
 				.get('/transactions/1.json')

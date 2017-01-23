@@ -73,21 +73,39 @@ describe('transactionService', () => {
 				.reply(200, {
 					totalCount: 3,
 					transactions: [
-						{ Date: '2016-12-12' },
-						{ Date: '2017-01-22' }
+						{ Date: '2016-12-12', Amount: '123' },
+						{ Date: '2017-01-22', Amount: '123' }
 					]
 				})
 				.get('/transactions/2.json')
 				.reply(200, {
 					totalCount: 3,
 					transactions: [
-						{ Date: '2017-01-12' }
+						{ Date: '2017-01-12', Amount: '123' }
 					]
 				});
 
 			return transactionService.downloadAllTransactions().then(transactions => {
-				const sortedDates = transactions.map(transaction => transaction.Date);
+				const sortedDates = transactions.map(transaction => transaction.Date.format('YYYY-MM-DD'));
 				assert.deepEqual(sortedDates, ['2017-01-22', '2017-01-12', '2016-12-12']);
+			});
+		});
+
+		it('optionally formats dates', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					transactions: [
+						{ Date: '2017-01-12', Amount: '123' },
+						{ Date: undefined, Amount: '123' },
+						{ Date: 'foo', Amount: '123' },
+					]
+				});
+
+			return transactionService.downloadAllTransactions({ formatted: true }).then(transactions => {
+				assert.equal(transactions.length, 3);
+				const dates = transactions.map(transaction => transaction.Date);
+				assert.deepEqual(dates, ['Jan 12th, 2017', 'Unknown', 'Unknown']);
 			});
 		});
 
@@ -97,15 +115,15 @@ describe('transactionService', () => {
 				.reply(200, {
 					totalCount: 3,
 					transactions: [
-						{ Company: 'XAVIER ACADEMY' },
-						{ Company: 'GROWINGCITY.COM xxxxxx4926 BC' }
+						{ Company: 'XAVIER ACADEMY', Amount: '123' },
+						{ Company: 'GROWINGCITY.COM xxxxxx4926 BC', Amount: '123' }
 					]
 				})
 				.get('/transactions/2.json')
 				.reply(200, {
 					totalCount: 3,
 					transactions: [
-						{ Company: 'NESTERS MARKET #x0064 VANCOUVER BC' }
+						{ Company: 'NESTERS MARKET #x0064 VANCOUVER BC', Amount: '123' }
 					]
 				});
 

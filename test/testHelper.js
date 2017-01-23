@@ -1,10 +1,10 @@
 'use strict';
 
-exports.mockTransaction = function (amount = '-123.45', ledger = 'Business Meals') {
+exports.mockTransaction = function (amount = '-123.45', ledger = 'Business Meals', company = 'WHOLE FOODS', date = '2017-01-01') {
 	return {
-		Date: '2017-01-01',
-		Ledger: ledger,
 		Amount: amount,
-		Company: 'WHOLE FOODS'
+		Ledger: ledger,
+		Company: company,
+		Date: date
 	};
 };

@@ -37,31 +37,18 @@
 	});
 
 	function fetchTransactions() {
-		return fetch('/a/1/transactions')
+		return fetch('/a/1/transactions?formatted=true')
 			.then(function (response) {
 				return response.json();
 			});
 	}
 
-	const dateOptions = {
-		year: 'numeric',
-		month: 'short',
-		day: 'numeric'
-	};
-
-	function formatDate(date) {
-		// NOTE-DZH: missing ordinal suffix (1st, 2nd etc)
-		// I would normally use moment or something to provide that
-		return new Date(date).toLocaleDateString('en-US', dateOptions);
-	}
-
 	function addResults(results) {
 		tableBodyNode.innerHTML = results.map(result => {
-			const formattedDate = formatDate(result.Date);
 			const rowClass = result.Ledger === '' ? ' class="income-row"' : '';
 			return `
 <tr${rowClass}>
-	<td>${formattedDate}</td>
+	<td>${result.Date}</td>
 	<td>${result.Company}</td>
 	<td>${result.Ledger}</td>
 	<td>${result.Amount}</td>
