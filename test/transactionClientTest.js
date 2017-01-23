@@ -11,7 +11,7 @@ describe('transactionClient', () => {
 	}
 
 	describe('fetchAllTransactions', () => {
-		it('downloads single page of transactions', () => {
+		it('fetches single page of transactions', () => {
 			nock(/.+/)
 				.get('/transactions/1.json')
 				.reply(200, {
@@ -24,7 +24,7 @@ describe('transactionClient', () => {
 			});
 		});
 
-		it('downloads multiple pages of transactions', () => {
+		it('combines multiple pages of transactions', () => {
 			nock(/.+/)
 				.get('/transactions/1.json')
 				.reply(200, {

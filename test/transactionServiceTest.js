@@ -19,8 +19,8 @@ describe('transactionService', () => {
 					transactions: mockTransactions(2)
 				});
 
-			return transactionService.downloadAllTransactions().then(transactions => {
-				assert.equal(transactions.length, 2);
+			return transactionService.downloadAllTransactions().then(result => {
+				assert.equal(result.transactions.length, 2);
 			});
 		});
 
@@ -37,8 +37,8 @@ describe('transactionService', () => {
 					transactions: mockTransactions(1)
 				});
 
-			return transactionService.downloadAllTransactions().then(transactions => {
-				assert.equal(transactions.length, 3);
+			return transactionService.downloadAllTransactions().then(result => {
+				assert.equal(result.transactions.length, 3);
 			});
 		});
 
@@ -62,8 +62,8 @@ describe('transactionService', () => {
 					transactions: []
 				});
 
-			return transactionService.downloadAllTransactions().then(transactions => {
-				assert.equal(transactions.length, 0);
+			return transactionService.downloadAllTransactions().then(result => {
+				assert.equal(result.transactions.length, 0);
 			});
 		});
 
@@ -85,8 +85,8 @@ describe('transactionService', () => {
 					]
 				});
 
-			return transactionService.downloadAllTransactions().then(transactions => {
-				const sortedDates = transactions.map(transaction => transaction.Date.format('YYYY-MM-DD'));
+			return transactionService.downloadAllTransactions().then(result => {
+				const sortedDates = result.transactions.map(transaction => transaction.Date.format('YYYY-MM-DD'));
 				assert.deepEqual(sortedDates, ['2017-01-22', '2017-01-12', '2016-12-12']);
 			});
 		});
@@ -102,9 +102,9 @@ describe('transactionService', () => {
 					]
 				});
 
-			return transactionService.downloadAllTransactions({ formatted: true }).then(transactions => {
-				assert.equal(transactions.length, 3);
-				const dates = transactions.map(transaction => transaction.Date);
+			return transactionService.downloadAllTransactions({ formatted: true }).then(result => {
+				assert.equal(result.transactions.length, 3);
+				const dates = result.transactions.map(transaction => transaction.Date);
 				assert.deepEqual(dates, ['Jan 12th, 2017', 'Unknown', 'Unknown']);
 			});
 		});
@@ -120,9 +120,9 @@ describe('transactionService', () => {
 					]
 				});
 
-			return transactionService.downloadAllTransactions({ formatted: true }).then(transactions => {
-				assert.equal(transactions.length, 3);
-				const amounts = transactions.map(transaction => transaction.Amount);
+			return transactionService.downloadAllTransactions({ formatted: true }).then(result => {
+				assert.equal(result.transactions.length, 3);
+				const amounts = result.transactions.map(transaction => transaction.Amount);
 				assert.deepEqual(amounts, ['$123.40', '($123.45)', '$123,456']);
 			});
 		});
@@ -145,10 +145,10 @@ describe('transactionService', () => {
 					]
 				});
 
-			return transactionService.downloadAllTransactions({ readable: true }).then(transactions => {
-				assert.equal(transactions[0].Company, 'XAVIER ACADEMY');
-				assert.equal(transactions[1].Company, 'GROWINGCITY.COM BC');
-				assert.equal(transactions[2].Company, 'NESTERS MARKET # VANCOUVER BC');
+			return transactionService.downloadAllTransactions({ readable: true }).then(result => {
+				assert.equal(result.transactions[0].Company, 'XAVIER ACADEMY');
+				assert.equal(result.transactions[1].Company, 'GROWINGCITY.COM BC');
+				assert.equal(result.transactions[2].Company, 'NESTERS MARKET # VANCOUVER BC');
 			});
 		});
 
@@ -170,100 +170,92 @@ describe('transactionService', () => {
 					]
 				});
 
-			return transactionService.downloadAllTransactions({ dedupe: true }).then(transactions => {
-				assert.equal(transactions.length, 2);
-				assert.equal(transactions[0].Amount, '123');
-				assert.equal(transactions[1].Amount, '456');
-			});
-		});
-	});
-
-	describe('calculateTotalBalance', () => {
-		it('sums round dollars', () => {
-			nock(/.+/)
-				.get('/transactions/1.json')
-				.reply(200, {
-					totalCount: 2,
-					transactions: [
-						mockTransaction('100'),
-						mockTransaction('50'),
-					]
-				});
-
-			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '150.00');
+			return transactionService.downloadAllTransactions({ dedupe: true }).then(result => {
+				assert.equal(result.transactions.length, 2);
+				assert.equal(result.transactions[0].Amount, '123');
+				assert.equal(result.transactions[1].Amount, '456');
 			});
 		});
 
-		it('sums dollars and cents', () => {
-			nock(/.+/)
-				.get('/transactions/1.json')
-				.reply(200, {
-					totalCount: 2,
-					transactions: [
-						mockTransaction('100.10'),
-						mockTransaction('50.40'),
-					]
-				});
+		describe('includes total balance', () => {
+			it('sums round dollars', () => {
+				nock(/.+/)
+					.get('/transactions/1.json')
+					.reply(200, {
+						totalCount: 2,
+						transactions: [
+							mockTransaction('100'),
+							mockTransaction('50'),
+						]
+					});
 
-			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '150.50');
+				return transactionService.downloadAllTransactions().then(result => {
+					assert.equal(result.totalBalance, '150.00');
+				});
 			});
-		});
 
-		it('sums negative amounts', () => {
-			nock(/.+/)
-				.get('/transactions/1.json')
-				.reply(200, {
-					totalCount: 2,
-					transactions: [
-						mockTransaction('-100.50'),
-						mockTransaction('50.50'),
-					]
+			it('respects formatted option', () => {
+				nock(/.+/)
+					.get('/transactions/1.json')
+					.reply(200, {
+						totalCount: 2,
+						transactions: [
+							mockTransaction('10000'),
+							mockTransaction('500'),
+						]
+					});
+
+				return transactionService.downloadAllTransactions({ formatted: true }).then(result => {
+					assert.equal(result.totalBalance, '$10,500');
 				});
-
-			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '-50.00');
 			});
-		});
 
-		it('sums multiple pages', () => {
-			nock(/.+/)
-				.get('/transactions/1.json')
-				.reply(200, {
-					totalCount: 4,
-					transactions: [
-						mockTransaction('100.10'),
-						mockTransaction('50.40'),
-					]
-				})
-				.get('/transactions/2.json')
-				.reply(200, {
-					totalCount: 4,
-					transactions: [
-						mockTransaction('-20.20'),
-						mockTransaction('-30.30'),
-					]
+			it('sums dollars and cents', () => {
+				nock(/.+/)
+					.get('/transactions/1.json')
+					.reply(200, {
+						totalCount: 2,
+						transactions: [
+							mockTransaction('100.10'),
+							mockTransaction('50.40'),
+						]
+					});
+
+				return transactionService.downloadAllTransactions().then(result => {
+					assert.equal(result.totalBalance, '150.50');
 				});
-
-			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '100.00');
 			});
-		});
 
-		it('handles common floating point issues', () => {
-			nock(/.+/)
-				.get('/transactions/1.json')
-				.reply(200, {
-					totalCount: 2,
-					transactions: [
-						mockTransaction('0.10'),
-						mockTransaction('0.20'),
-					]
+			it('sums negative amounts', () => {
+				nock(/.+/)
+					.get('/transactions/1.json')
+					.reply(200, {
+						totalCount: 2,
+						transactions: [
+							mockTransaction('-100.50'),
+							mockTransaction('50.50'),
+						]
+					});
+
+				return transactionService.downloadAllTransactions({ formatted: true }).then(result => {
+					assert.equal(result.totalBalance, '($50)');
 				});
+			});
 
-			return transactionService.calculateTotalBalance().then(balance => {
-				assert.equal(balance, '0.30');
+			it('handles common floating point issues', () => {
+				nock(/.+/)
+					.get('/transactions/1.json')
+					.reply(200, {
+						totalCount: 2,
+						transactions: [
+							mockTransaction('0.10'),
+							mockTransaction('0.20'),
+						]
+					});
+
+				return transactionService.downloadAllTransactions({ formatted: true }).then(result => {
+					assert.equal(result.totalBalance, '$0.30');
+				});
 			});
 		});
 	});

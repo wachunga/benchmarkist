@@ -10,13 +10,13 @@
 		<div>Bench Test</div>
 	</nav>
 	<div class="container">
-		<h1>Transactions</h1>
+		<h1 class="section-header">Transactions <span class="transaction-count"></span></h1>
 		<table class="sum-table">
 			<thead>
-			<th>Date</th>
-			<th>Company</th>
-			<th>Account</th>
-			<th><!-- dynamic content --></th>
+				<th>Date</th>
+				<th>Company</th>
+				<th>Account</th>
+				<th class="sum-table-total"></th>
 			</thead>
 			<tbody>
 				<tr>
@@ -27,24 +27,27 @@
 	</div>
 
 <script>
-	const tableBodyNode = document.querySelector('.sum-table tbody');
 	if (!fetch) {
 		alert('Your browser is currently unsupported');
 	}
 
-	fetchTransactions().then(function (result) {
-		addResults(result.transactions);
-	});
+	const transactionCountElement = document.querySelector('.transaction-count');
+	const transactionTableBodyElement = document.querySelector('.sum-table tbody');
+	const transactionTotalElement = document.querySelector('.sum-table-total');
+
+	fetchTransactions().then(addResults);
 
 	function fetchTransactions() {
-		return fetch('/a/1/transactions?formatted=true')
+		return fetch('/a/1/transactions?formatted=true&readable=true&dedupe=true')
 			.then(function (response) {
 				return response.json();
 			});
 	}
 
 	function addResults(results) {
-		tableBodyNode.innerHTML = results.map(result => {
+		transactionTotalElement.innerText = results.totalBalance;
+		transactionCountElement.innerText = `(${results.transactions.length})`;
+		transactionTableBodyElement.innerHTML = results.transactions.map(result => {
 			const rowClass = 'row-' + result.Ledger.toLowerCase();
 			return `
 <tr class="${rowClass}">
