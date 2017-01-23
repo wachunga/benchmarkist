@@ -1,0 +1,66 @@
+html {
+	font-size: 10px;
+}
+
+/* colors, fonts etc are from https://bench.co/press-kit/#brand */
+
+body {
+	margin: 0;
+	font-family: "LLCircularWeb", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	background: #EFEDE8;
+	font-size: 1.6rem;
+	line-height: 1.5;
+}
+
+.main-nav {
+	line-height: 6rem;
+	color: white;
+	background-color: #098B8C;
+	text-align: center;
+	font-weight: 500;
+}
+
+.container {
+	width: 100rem;
+	margin: 0 auto;
+	padding-bottom: 6rem;
+}
+
+.sum-table {
+	width: 100%;
+	background-color: white;
+	border-radius: 0.3rem;
+	border: 1px solid #ececec;
+	box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.2);
+	border-collapse: collapse;
+	font-weight: 500;
+}
+
+.sum-table th,
+.sum-table td {
+	padding: 1.2rem;
+	border-bottom: 1px solid #ececec;
+}
+
+.sum-table thead {
+	text-align: left;
+	color: #098B8C;
+	font-size: 1.7rem;
+}
+
+.sum-table tbody {
+	background-color: #fafafa;
+}
+.sum-table tbody tr:first-child {
+	background-image: linear-gradient(to bottom, #f6f6f6, #fafafa); /* mock has subtle gradient */
+}
+
+.sum-table td:nth-child(1), /* date and account columns */
+.sum-table td:nth-child(3) {
+	color: #8C8981;
+}
+
+.sum-table .income-row td {
+	color: #098B8C;
+}

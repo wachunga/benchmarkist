@@ -3,21 +3,28 @@
 <head>
 	<meta charset="utf-8">
 	<title>Transact</title>
+	<link rel="stylesheet" href="main.css">
 </head>
-
 <body>
-	<h1>Transactions</h1>
-	<table class="sum-table">
-		<thead>
+	<nav class="main-nav">
+		<div>Bench Test</div>
+	</nav>
+	<div class="container">
+		<h1>Transactions</h1>
+		<table class="sum-table">
+			<thead>
 			<th>Date</th>
 			<th>Company</th>
 			<th>Account</th>
-			<th></th> <!-- TODO: total balance -->
-		</thead>
-		<tbody>
-
-		</tbody>
-	</table>
+			<th><!-- dynamic content --></th>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan="4">Loading...</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 <script>
 	const tableBodyNode = document.querySelector('.sum-table tbody');
@@ -36,9 +43,29 @@
 			});
 	}
 
+	const dateOptions = {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric'
+	};
+
+	function formatDate(date) {
+		// NOTE-DZH: missing ordinal suffix (1st, 2nd etc)
+		// I would normally use moment or something to provide that
+		return new Date(date).toLocaleDateString('en-US', dateOptions);
+	}
+
 	function addResults(results) {
 		tableBodyNode.innerHTML = results.map(result => {
-			return `<tr><td>${result.Date}</td><td>${result.Company}</td><td>${result.Ledger}</td><td>${result.Amount}</td></tr>`;
+			const formattedDate = formatDate(result.Date);
+			const rowClass = result.Ledger === '' ? ' class="income-row"' : '';
+			return `
+<tr${rowClass}>
+	<td>${formattedDate}</td>
+	<td>${result.Company}</td>
+	<td>${result.Ledger}</td>
+	<td>${result.Amount}</td>
+</tr>`;
 		}).join('\n');
 	}
 </script>
