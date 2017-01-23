@@ -109,6 +109,24 @@ describe('transactionService', () => {
 			});
 		});
 
+		it('optionally formats amounts', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					transactions: [
+						mockTransaction('123.4'),
+						mockTransaction('-123.45'),
+						mockTransaction('123456'),
+					]
+				});
+
+			return transactionService.downloadAllTransactions({ formatted: true }).then(transactions => {
+				assert.equal(transactions.length, 3);
+				const amounts = transactions.map(transaction => transaction.Amount);
+				assert.deepEqual(amounts, ['$123.40', '($123.45)', '$123,456']);
+			});
+		});
+
 		it('optionally strips sanitized numbers for readability', () => {
 			nock(/.+/)
 				.get('/transactions/1.json')

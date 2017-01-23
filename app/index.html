@@ -45,9 +45,9 @@
 
 	function addResults(results) {
 		tableBodyNode.innerHTML = results.map(result => {
-			const rowClass = result.Ledger === '' ? ' class="income-row"' : '';
+			const rowClass = 'row-' + result.Ledger.toLowerCase();
 			return `
-<tr${rowClass}>
+<tr class="${rowClass}">
 	<td>${result.Date}</td>
 	<td>${result.Company}</td>
 	<td>${result.Ledger}</td>
