@@ -114,6 +114,37 @@ describe('transactionApiClient', () => {
 				assert.notEqual(transactions[1].Ledger, 'Income');
 			});
 		});
+
+		it('strips non-readable company names', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					totalCount: 5,
+					transactions: [
+						{ Company: 'XAVIER ACADEMY', Amount: '123' },
+						{ Company: 'GROWINGCITY.COM xxxxxx4926 BC', Amount: '123' },
+						{ Company: 'DROPBOX xxxxxx8396 CA 9.99 USD @ xx1001', Amount: '123' }
+					]
+				})
+				.get('/transactions/2.json')
+				.reply(200, {
+					transactions: [
+						{ Company: 'NESTERS MARKET #x0064 VANCOUVER BC', Amount: '123' },
+						{ Company: 'ECHOSIGN xxxxxxxx6744 CA xx8.80 USD @ xx0878', Amount: '123' },
+					]
+				});
+
+			return transactionClient.fetchAllTransactions().then(transactions => {
+				const companies = transactions.map(transaction => transaction.Company);
+				assert.deepEqual(companies, [
+					'XAVIER ACADEMY',
+					'GROWINGCITY.COM BC',
+					'DROPBOX',
+					'NESTERS MARKET VANCOUVER BC',
+					'ECHOSIGN'
+				]);
+			});
+		});
 	});
 });
 

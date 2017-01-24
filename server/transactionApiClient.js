@@ -63,7 +63,7 @@ function normalizeResponse(response) {
 			Date: normalizeDate(transaction),
 			Amount: transaction.Amount,
 			Ledger: normalizeLedger(transaction),
-			Company: transaction.Company
+			Company: normalizeCompany(transaction)
 		};
 	}).filter(Boolean); // drop invalid
 }
@@ -78,3 +78,21 @@ function normalizeLedger(transaction) {
 	}
 	return transaction.Ledger.replace(/ Expense/i, '').trim();
 }
+
+const storeLocations = /#\S+/gi;
+const maybeSanitizedNumbers = /\b[x0-9][x0-9.]+\b/gi;
+const exchangeRelated = /\bCAD?\b|\bUSD\b|@/gi;
+
+function normalizeCompany(transaction) {
+	if (!transaction.Company) {
+		return 'Unknown';
+	}
+
+	return transaction.Company
+		.replace(storeLocations, '')
+		.replace(maybeSanitizedNumbers, '')
+		.replace(exchangeRelated, '')
+		.replace(/\s{2,}/g, ' ') // normalize spaces
+		.trim();
+}
+

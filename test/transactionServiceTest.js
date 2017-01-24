@@ -127,31 +127,6 @@ describe('transactionService', () => {
 			});
 		});
 
-		it('optionally strips sanitized numbers for readability', () => {
-			nock(/.+/)
-				.get('/transactions/1.json')
-				.reply(200, {
-					totalCount: 3,
-					transactions: [
-						{ Company: 'XAVIER ACADEMY', Amount: '123' },
-						{ Company: 'GROWINGCITY.COM xxxxxx4926 BC', Amount: '123' }
-					]
-				})
-				.get('/transactions/2.json')
-				.reply(200, {
-					totalCount: 3,
-					transactions: [
-						{ Company: 'NESTERS MARKET #x0064 VANCOUVER BC', Amount: '123' }
-					]
-				});
-
-			return transactionService.downloadAllTransactions({ formatted: true }).then(result => {
-				assert.equal(result.transactions[0].Company, 'XAVIER ACADEMY');
-				assert.equal(result.transactions[1].Company, 'GROWINGCITY.COM BC');
-				assert.equal(result.transactions[2].Company, 'NESTERS MARKET # VANCOUVER BC');
-			});
-		});
-
 		it('optionally removes duplicates', () => {
 			nock(/.+/)
 				.get('/transactions/1.json')
