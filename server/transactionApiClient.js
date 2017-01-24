@@ -76,5 +76,5 @@ function normalizeLedger(transaction) {
 	if (!transaction.Ledger) {
 		return parseFloat(transaction.Amount) > 0 ? 'Income' : 'Unknown';
 	}
-	return transaction.Ledger.replace(/ Expense$/i, '');
+	return transaction.Ledger.replace(/ Expense/i, '').trim();
 }

@@ -11,7 +11,6 @@ formatter.formatCurrency = function (amount) {
 	return numeral(amount).format(asCurrencyWithThousandsSeparator);
 };
 formatter.formatPercentage = function (amount) {
-	console.log(typeof amount, amount);
 	return numeral(amount).format(asPercentage);
 };
 

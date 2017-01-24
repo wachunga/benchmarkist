@@ -134,9 +134,27 @@ describe('expenseService', () => {
 				});
 
 			return expenseService.listExpenseCategories({ formatted: true }).then(categories => {
-				console.log(categories);
 				const percents = categories.map(category => category.percent);
 				assert.deepEqual(percents, ['45.5%', '36.4%', '18.2%']);
+			});
+		});
+
+		it('includes benchmarks', () => {
+			nock(/.+/)
+				.get('/transactions/1.json')
+				.reply(200, {
+					totalCount: 3,
+					transactions: [
+						mockTransaction('-250', 'Travel, Nonlocal'),
+						mockTransaction('-100', 'Web Hosting & Services'),
+						mockTransaction('-200', 'Equipment')
+					]
+				});
+
+			return expenseService.listExpenseCategories({ formatted: true, benchmark: true }).then(categories => {
+				const benchmarks = categories.map(category => category.benchmark).map(Boolean);
+				console.log(benchmarks);
+				assert(benchmarks.length, 3);
 			});
 		});
 	});

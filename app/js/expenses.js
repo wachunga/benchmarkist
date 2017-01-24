@@ -10,7 +10,7 @@
 	fetchExpenses().then(showExpenses);
 
 	function fetchExpenses() {
-		return fetch('/a/1/expenses?formatted=true&dedupe=true').then(response => response.json());
+		return fetch('/a/1/expenses?formatted=true&dedupe=true&benchmark=true').then(response => response.json());
 	}
 
 	function showExpenses(results) {
@@ -23,6 +23,6 @@
 		}).join('\n');
 		const detailsTable = `<table class="expense-details-table"><tbody>${detailsTableRows}</tbody></table>`;
 		const detailsElement = `<details><summary>${expense.categoryKey}</summary>${detailsTable}</details>`;
-		return `<tr><td>${detailsElement}</td><td>${expense.total}</td><td>${expense.percent}</td></tr>`;
+		return `<tr><td>${detailsElement}</td><td>${expense.total}</td><td>${expense.percent}</td><td>${expense.benchmark}</td></tr>`;
 	}
 }());

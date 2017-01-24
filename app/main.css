@@ -31,6 +31,11 @@ body {
 	font-size: 2rem;
 }
 
+.help {
+	border-bottom: 1px dotted;
+	cursor: help;
+}
+
 .sum-table {
 	width: 100%;
 	background-color: white;
@@ -66,13 +71,15 @@ body {
 	background-image: linear-gradient(to bottom, #f6f6f6, #fafafa); /* mock has subtle gradient */
 }
 
-/* total and percent columns */
+/* total, percent and benchmark columns */
 .transactions .sum-table th:nth-child(4),
 .transactions .sum-table td:nth-child(4),
 .expenses .sum-table th:nth-child(2),
 .expenses .sum-table td:nth-child(2),
-.expenses .sum-table td:nth-child(3),
 .expenses .sum-table th:nth-child(3),
+.expenses .sum-table td:nth-child(3),
+.expenses .sum-table th:nth-child(4),
+.expenses .sum-table td:nth-child(4),
 .expense-details-table td:nth-child(3) {
 	text-align: right;
 }
@@ -88,7 +95,7 @@ body {
 }
 
 .expenses .col-category {
-	width: 70%;
+	width: 65%;
 }
 
 .expenses tbody td {

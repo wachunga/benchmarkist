@@ -3,6 +3,7 @@
 const Big = require('big.js');
 const formatter = require('./formatter');
 const transactionService = require('./transactionService');
+const benchmarkService = require('./benchmark/benchmarkService');
 
 const expenseService = module.exports = {};
 
@@ -12,20 +13,25 @@ expenseService.listExpenseCategories = function (options = {}) {
 		let totalExpenses = new Big(0);
 		const categoryMap = new Map();
 		result.transactions.forEach(transaction => {
-			if (!transaction.Ledger || transaction.Ledger === 'Income') {
+			const categoryKey = transaction.Ledger;
+			if (!categoryKey || categoryKey === 'Income') {
 				return;
 			}
 
-			if (!categoryMap.has(transaction.Ledger)) {
-				categoryMap.set(transaction.Ledger, {
-					categoryKey: transaction.Ledger,
+			if (!categoryMap.has(categoryKey)) {
+				const initialEntry = {
+					categoryKey,
 					total: new Big(0),
 					transactions: []
-				});
+				};
+				if (options.benchmark) {
+					initialEntry.benchmark = benchmarkService.getExpenseBenchmark(categoryKey);
+				}
+				categoryMap.set(categoryKey, initialEntry);
 			}
 			totalExpenses = totalExpenses.plus(transaction.Amount);
 
-			const entry = categoryMap.get(transaction.Ledger);
+			const entry = categoryMap.get(categoryKey);
 			entry.total = entry.total.plus(transaction.Amount);
 			entry.transactions.push(options.formatted ? formatter.formatTransaction(transaction) : transaction);
 		});
@@ -49,6 +55,9 @@ function calculatePercent(category, totalExpenses) {
 function formatResult(category) {
 	category.total = formatter.formatCurrency(category.total);
 	category.percent = formatter.formatPercentage(category.percent);
+	if (category.benchmark) {
+		category.benchmark = formatter.formatPercentage(category.benchmark);
+	}
 	return category;
 }
 
