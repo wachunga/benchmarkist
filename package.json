@@ -1,7 +1,7 @@
 {
-  "name": "transact",
+  "name": "benchmarkist",
   "version": "0.1.0",
-  "description": "",
+  "description": "transaction and expense management app",
   "main": "index.js",
   "engines": {
     "node": ">= 6"
