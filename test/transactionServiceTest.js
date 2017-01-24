@@ -145,7 +145,7 @@ describe('transactionService', () => {
 					]
 				});
 
-			return transactionService.downloadAllTransactions({ readable: true }).then(result => {
+			return transactionService.downloadAllTransactions({ formatted: true }).then(result => {
 				assert.equal(result.transactions[0].Company, 'XAVIER ACADEMY');
 				assert.equal(result.transactions[1].Company, 'GROWINGCITY.COM BC');
 				assert.equal(result.transactions[2].Company, 'NESTERS MARKET # VANCOUVER BC');

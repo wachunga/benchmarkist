@@ -1,7 +1,7 @@
 'use strict';
 
 const Big = require('big.js');
-const numeral = require('numeral');
+const formatter = require('./formatter');
 const transactionApiClient = require('./transactionApiClient');
 
 const transactionService = module.exports = {};
@@ -18,20 +18,8 @@ transactionService.downloadAllTransactions = function (options = {}) {
 
 		let totalBalance = calculateTotalBalance(sortedTransactions);
 		if (options.formatted) {
-			totalBalance = formatCurrency(totalBalance);
-		}
-
-		if (options.readable || options.formatted) {
-			sortedTransactions = sortedTransactions.map(transaction => {
-				if (options.readable) {
-					stripSanitizedNumbers(transaction);
-				}
-				if (options.formatted) {
-					formatDate(transaction);
-					formatAmount(transaction);
-				}
-				return transaction;
-			});
+			totalBalance = formatter.formatCurrency(totalBalance);
+			sortedTransactions = sortedTransactions.map(formatter.formatTransaction);
 		}
 
 		return {
@@ -43,31 +31,6 @@ transactionService.downloadAllTransactions = function (options = {}) {
 
 function sortByDateDescending(a, b) {
 	return new Date(b.Date) - new Date(a.Date);
-}
-
-// sequences of digits > 4 are sanitized (eg xx1234) which is not very human-friendly
-const sanitizedRegex = /x+[0-9.]+/gi;
-
-function stripSanitizedNumbers(transaction) {
-	const stripped = transaction.Company.replace(sanitizedRegex, '').replace(/\s{2,}/g, ' ');
-	transaction.Company = stripped;
-}
-
-const asShortMonthDayYear = 'MMM Do, YYYY';
-
-function formatDate(transaction) {
-	const formattedDate = transaction.Date.isValid() ? transaction.Date.format(asShortMonthDayYear) : 'Unknown';
-	transaction.Date = formattedDate;
-}
-
-function formatAmount(transaction) {
-	transaction.Amount = formatCurrency(transaction.Amount);
-}
-
-const asCurrencyWithThousandsSeparator = '($0,0[.]00)';
-
-function formatCurrency(amount) {
-	return numeral(amount).format(asCurrencyWithThousandsSeparator);
 }
 
 function dedupeTransactions(transactions) {

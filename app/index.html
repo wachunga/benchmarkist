@@ -55,7 +55,7 @@
 	fetchExpenses().then(showExpenses);
 
 	function fetchExpenses() {
-		return fetch('/a/1/expenses?formatted=true&readable=true&dedupe=true')
+		return fetch('/a/1/expenses?formatted=true&dedupe=true')
 			.then(function (response) {
 				return response.json();
 			});
@@ -96,7 +96,7 @@
 	fetchTransactions().then(addResults);
 
 	function fetchTransactions() {
-		return fetch('/a/1/transactions?formatted=true&readable=true&dedupe=true')
+		return fetch('/a/1/transactions?formatted=true&dedupe=true')
 			.then(function (response) {
 				return response.json();
 			});

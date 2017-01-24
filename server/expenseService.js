@@ -1,38 +1,35 @@
 'use strict';
 
 const Big = require('big.js');
-const numeral = require('numeral');
+const formatter = require('./formatter');
 const transactionService = require('./transactionService');
 
 const expenseService = module.exports = {};
 
-expenseService.listExpenseCategories = function (options) {
+expenseService.listExpenseCategories = function (options = {}) {
 	const transactionOptions = Object.assign({}, options, { formatted: false });
 	return transactionService.downloadAllTransactions(transactionOptions).then(result => {
-		const categoryMap = {};
+		const categoryMap = new Map();
 		result.transactions.forEach(transaction => {
 			if (!transaction.Ledger || transaction.Ledger === 'Income') {
 				return;
 			}
 
-			if (!categoryMap[transaction.Ledger]) {
-				categoryMap[transaction.Ledger] = {
+			if (!categoryMap.has(transaction.Ledger)) {
+				categoryMap.set(transaction.Ledger, {
 					categoryKey: transaction.Ledger,
 					total: new Big(0),
 					transactions: []
-				};
+				});
 			}
 
-			const entry = categoryMap[transaction.Ledger];
+			const entry = categoryMap.get(transaction.Ledger);
 			entry.total = entry.total.plus(transaction.Amount);
-			// TODO: extract formatter.transaction and use that here before pushing
-			entry.transactions.push(transaction);
+			entry.transactions.push(options.formatted ? formatter.formatTransaction(transaction) : transaction);
 		});
 
-		return Object.keys(categoryMap)
-			.map(key => categoryMap[key])
-			.sort(byTotal)
-			.map(formatTotal); // TODO: control with options.formatted
+		const sorted = Array.from(categoryMap.values()).sort(byTotal);
+		return options.formatted ? sorted.map(formatTotal) : sorted;
 	});
 };
 
@@ -41,13 +38,7 @@ function byTotal(a, b) {
 }
 
 function formatTotal(category) {
-	category.total = formatCurrency(category.total);
+	category.total = formatter.formatCurrency(category.total);
 	return category;
-}
-
-const asCurrencyWithThousandsSeparator = '($0,0[.]00)';
-
-function formatCurrency(amount) {
-	return numeral(amount).format(asCurrencyWithThousandsSeparator);
 }
 

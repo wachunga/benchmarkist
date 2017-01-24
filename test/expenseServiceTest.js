@@ -29,7 +29,7 @@ describe('expenseService', () => {
 				]
 			});
 
-		return expenseService.listExpenseCategories().then(categories => {
+		return expenseService.listExpenseCategories({ formatted: true }).then(categories => {
 			assert.strictEqual(categories[0].total, '($100)');
 		});
 	});
@@ -92,7 +92,7 @@ describe('expenseService', () => {
 				]
 			});
 
-		return expenseService.listExpenseCategories().then(categories => {
+		return expenseService.listExpenseCategories({ formatted: true }).then(categories => {
 			assert.equal(categories.length, 2);
 
 			const hosting = categories.find(category => category.categoryKey === 'Web Hosting');
