@@ -3,7 +3,7 @@
 const assert = require('assert');
 const nock = require('nock');
 const mockTransaction = require('./testHelper').mockTransaction;
-const transactionService = require('../server/transactionService');
+const transactionService = require('../server/transaction/transactionService');
 
 describe('transactionService', () => {
 	function mockTransactions(count) {

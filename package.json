@@ -15,17 +15,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wachunga/transact.git"
+    "url": "git+https://github.com/wachunga/benchmarkist.git"
   },
   "author": "David Hirtle <david.hirtle@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wachunga/transact/issues"
+    "url": "https://github.com/wachunga/benchmarkist/issues"
   },
-  "homepage": "https://github.com/wachunga/transact#readme",
+  "homepage": "https://github.com/wachunga/benchmarkist#readme",
   "dependencies": {
     "big.js": "3.1.3",
     "bluebird": "3.4.7",
+    "debug": "2.6.0",
     "express": "4.14.0",
     "got": "6.7.1",
     "moment": "2.17.1",

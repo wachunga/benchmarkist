@@ -3,7 +3,7 @@
 const assert = require('assert');
 const nock = require('nock');
 const mockTransaction = require('./testHelper').mockTransaction;
-const expenseService = require('../server/expenseService');
+const expenseService = require('../server/expense/expenseService');
 
 describe('expenseService', () => {
 	describe('listExpenseCategories', () => {

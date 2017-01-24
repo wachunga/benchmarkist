@@ -3,7 +3,7 @@
 const request = require('got');
 const Promise = require('bluebird');
 const moment = require('moment');
-const cache = require('./cache');
+const cache = require('../cache');
 
 const transactionApiClient = module.exports = {};
 
@@ -33,26 +33,22 @@ transactionApiClient.fetchAllTransactions = function () {
 		return Promise
 			.map(additionalPages, fetchPage, { concurrency: maxConcurrency })
 			.then(additionalResponses => {
-				return [pageOneResponse, ...additionalResponses]
-					.map(normalizeResponse)
-					.reduce((combined, transactions) => {
-						return combined.concat(transactions);
-					}, []);
+				return [pageOneResponse, ...additionalResponses].map(normalizeResponse).reduce(flatten, []);
 			});
 	});
 };
 
 function remainingPages(result) {
 	const finalPage = Math.ceil(result.totalCount / result.transactions.length);
-	return range(2, finalPage);
+	const remaining = [];
+	for (let i = 2; i <= finalPage; i += 1) {
+		remaining.push(i);
+	}
+	return remaining;
 }
 
-function range(start = 1, end) {
-	const ranged = [];
-	for (let i = start; i <= end; i += 1) {
-		ranged.push(i);
-	}
-	return ranged;
+function flatten(memo, list) {
+	return memo.concat(list);
 }
 
 function normalizeResponse(result) {

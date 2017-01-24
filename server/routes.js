@@ -1,10 +1,8 @@
 'use strict';
 
 const routes = require('express').Router();
-const transactionService = require('./transactionService');
-const expenseService = require('./expenseService');
-
-// TODO: split this up
+const transactionService = require('./transaction/transactionService');
+const expenseService = require('./expense/expenseService');
 
 routes.get('/a/1/transactions', (req, res) => {
 	transactionService.downloadAllTransactions(parseOptions(req))

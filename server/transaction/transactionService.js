@@ -1,7 +1,8 @@
 'use strict';
 
 const Big = require('big.js');
-const formatter = require('./formatter');
+const debug = require('debug')('benchmarkist');
+const formatter = require('../formatter');
 const transactionApiClient = require('./transactionApiClient');
 
 const transactionService = module.exports = {};
@@ -10,10 +11,10 @@ transactionService.downloadAllTransactions = function (options = {}) {
 	return transactionApiClient.fetchAllTransactions().then(transactions => {
 		let sortedTransactions = transactions.sort(sortByDateDescending);
 
-		console.log('fetched %d transactions', sortedTransactions.length);
+		debug('fetched %d transactions', sortedTransactions.length);
 		if (options.dedupe) {
 			sortedTransactions = dedupeTransactions(sortedTransactions);
-			console.log('after dedupe: %d transactions', sortedTransactions.length);
+			debug('after dedupe: %d transactions', sortedTransactions.length);
 		}
 
 		let totalBalance = calculateTotalBalance(sortedTransactions);
@@ -30,7 +31,7 @@ transactionService.downloadAllTransactions = function (options = {}) {
 };
 
 function sortByDateDescending(a, b) {
-	return new Date(b.Date) - new Date(a.Date);
+	return b.Date - a.Date;
 }
 
 function dedupeTransactions(transactions) {

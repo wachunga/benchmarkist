@@ -4,7 +4,6 @@ const cache = module.exports = {};
 
 let enabled = true;
 
-// used for tests
 cache.disable = function () {
 	enabled = false;
 };

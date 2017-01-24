@@ -1,17 +1,19 @@
 'use strict';
 
 const Big = require('big.js');
-const formatter = require('./formatter');
-const transactionService = require('./transactionService');
-const benchmarkService = require('./benchmark/benchmarkService');
+const debug = require('debug')('benchmarkist');
+const formatter = require('../formatter');
+const transactionService = require('../transaction/transactionService');
+const benchmarkService = require('../benchmark/benchmarkService');
 
 const expenseService = module.exports = {};
 
 expenseService.listExpenseCategories = function (options = {}) {
-	const transactionOptions = Object.assign({}, options, { formatted: false });
-	return transactionService.downloadAllTransactions(transactionOptions).then(result => {
+	const optionsExcludingFormatted = Object.assign({}, options, { formatted: false });
+	return transactionService.downloadAllTransactions(optionsExcludingFormatted).then(result => {
 		let totalExpenses = new Big(0);
 		const categoryMap = new Map();
+
 		result.transactions.forEach(transaction => {
 			const categoryKey = transaction.Ledger;
 			if (!categoryKey || categoryKey === 'Income') {
@@ -39,6 +41,7 @@ expenseService.listExpenseCategories = function (options = {}) {
 		const sorted = Array.from(categoryMap.values())
 			.map(category => calculatePercent(category, totalExpenses))
 			.sort(byTotal);
+		debug('found %d expense categories with total of %s', sorted.length, totalExpenses);
 		return options.formatted ? sorted.map(formatResult) : sorted;
 	});
 };
