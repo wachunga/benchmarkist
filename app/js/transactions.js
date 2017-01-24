@@ -24,11 +24,12 @@
 
 	function makeTransactionTableRow(result) {
 		const rowClass = `row-${result.Ledger.toLowerCase()}`;
+		const link = `#category-${result.Ledger.toLowerCase().split(/\W/)[0]}`;
 		return `
 	<tr class="${rowClass}">
 		<td>${result.Date}</td>
 		<td>${result.Company}</td>
-		<td>${result.Ledger}</td>
+		<td><a href="${link}">${result.Ledger}</a></td>
 		<td>${result.Amount}</td>
 	</tr>`;
 	}

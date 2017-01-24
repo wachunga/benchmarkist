@@ -18,11 +18,9 @@ cache.cached = function (key, missFn) {
 	}
 
 	if (memory.has(key)) {
-		console.log('cache hit', key);
 		return Promise.resolve(memory.get(key));
 	}
 
-	console.log('cache miss', key);
 	return missFn().then(result => {
 		memory.set(key, result);
 		return result;
