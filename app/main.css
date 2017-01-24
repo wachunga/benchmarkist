@@ -44,26 +44,41 @@ body {
 .sum-table th,
 .sum-table td {
 	padding: 1.2rem;
-	border-bottom: 1px solid #ececec;
 }
 
-.sum-table thead {
+.sum-table tr {
+	border-bottom: 1px solid #ececec;
+}
+.sum-table tbody tr:last-child {
+	border: none;
+}
+
+.sum-table > thead {
 	text-align: left;
 	color: #098B8C;
 	font-size: 1.7rem;
 }
 
-.sum-table tbody {
+.sum-table > tbody {
 	background-color: #fafafa;
 }
-.sum-table tbody tr:first-child {
+.sum-table > tbody > tr:first-child {
 	background-image: linear-gradient(to bottom, #f6f6f6, #fafafa); /* mock has subtle gradient */
+}
+
+/* total column */
+.transactions .sum-table th:nth-child(4),
+.transactions .sum-table td:nth-child(4),
+.expenses .sum-table th:nth-child(2),
+.expenses .sum-table td:nth-child(2),
+.expense-details-table td:nth-child(3) {
+	text-align: right;
 }
 
 /* date and account columns */
 .transactions .sum-table td:nth-child(1),
 .transactions .sum-table td:nth-child(3) {
-	color: #8C8981 !important;
+	color: #8C8981;
 }
 
 .transactions .row-income td {
@@ -80,4 +95,24 @@ body {
 
 .expenses summary {
 	cursor: pointer;
+	margin-bottom: 0.7rem;
+}
+
+.expense-details-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-weight: normal;
+}
+
+.expense-details-table > thead {
+	text-align: left;
+}
+
+.expense-details-table th,
+.expense-details-table td {
+	padding: 1rem; /* reduce */
+}
+
+.expenses .expense-details-table td:nth-child(2) {
+	text-align: left;
 }
