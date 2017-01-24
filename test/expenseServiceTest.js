@@ -3,7 +3,7 @@
 const assert = require('assert');
 const nock = require('nock');
 const mockTransaction = require('./testHelper').mockTransaction;
-const expenseService = require('../lib/expenseService');
+const expenseService = require('../server/expenseService');
 
 describe('expenseService', () => {
 	it('listExpenseCategories handles no transactions', () => {
@@ -30,7 +30,7 @@ describe('expenseService', () => {
 			});
 
 		return expenseService.listExpenseCategories().then(categories => {
-			assert.strictEqual(categories[0].total, '-100.00');
+			assert.strictEqual(categories[0].total, '($100)');
 		});
 	});
 
@@ -96,9 +96,9 @@ describe('expenseService', () => {
 			assert.equal(categories.length, 2);
 
 			const hosting = categories.find(category => category.categoryKey === 'Web Hosting');
-			assert.equal(hosting.total, '-200.00');
+			assert.equal(hosting.total, '($200)');
 			const travel = categories.find(category => category.categoryKey === 'Travel Expense');
-			assert.equal(travel.total, '-300.75');
+			assert.equal(travel.total, '($300.75)');
 		});
 	});
 

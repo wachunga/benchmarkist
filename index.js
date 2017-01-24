@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./lib/app');
+module.exports = require('./server/app');
