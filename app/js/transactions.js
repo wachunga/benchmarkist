@@ -1,34 +1,35 @@
+'use strict';
+
 (function () {
+	if (!fetch) {
+		alert('Your browser is not supported. Please use an evergreen browser like Chrome or Firefox.');
+		return;
+	}
 
-if (!fetch) {
-	alert('Your browser is currently unsupported');
-}
+	const transactionCountElement = document.querySelector('.transaction-count');
+	const transactionTableBodyElement = document.querySelector('.transaction-table-body');
+	const transactionTotalElement = document.querySelector('.transaction-table-total');
 
-const transactionCountElement = document.querySelector('.transaction-count');
-const transactionTableBodyElement = document.querySelector('.transaction-table-body');
-const transactionTotalElement = document.querySelector('.transaction-table-total');
+	fetchTransactions().then(addResults);
 
-fetchTransactions().then(addResults);
+	function fetchTransactions() {
+		return fetch('/a/1/transactions?formatted=true&dedupe=true').then(response => response.json());
+	}
 
-function fetchTransactions() {
-	return fetch('/a/1/transactions?formatted=true&dedupe=true').then(response => response.json());
-}
+	function addResults(results) {
+		transactionTotalElement.innerText = results.totalBalance;
+		transactionCountElement.innerText = `(${results.transactions.length})`;
+		transactionTableBodyElement.innerHTML = results.transactions.map(makeTransactionTableRow).join('\n');
+	}
 
-function addResults(results) {
-	transactionTotalElement.innerText = results.totalBalance;
-	transactionCountElement.innerText = `(${results.transactions.length})`;
-	transactionTableBodyElement.innerHTML = results.transactions.map(makeTransactionTableRow).join('\n');
-}
-
-function makeTransactionTableRow(result) {
-	const rowClass = 'row-' + result.Ledger.toLowerCase();
-	return `
-<tr class="${rowClass}">
-	<td>${result.Date}</td>
-	<td>${result.Company}</td>
-	<td>${result.Ledger}</td>
-	<td>${result.Amount}</td>
-</tr>`;
-}
-
-})();
+	function makeTransactionTableRow(result) {
+		const rowClass = `row-${result.Ledger.toLowerCase()}`;
+		return `
+	<tr class="${rowClass}">
+		<td>${result.Date}</td>
+		<td>${result.Company}</td>
+		<td>${result.Ledger}</td>
+		<td>${result.Amount}</td>
+	</tr>`;
+	}
+}());
