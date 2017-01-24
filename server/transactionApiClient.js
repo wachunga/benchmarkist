@@ -58,10 +58,23 @@ function normalizeResponse(response) {
 			// treating it as 0 could be misleading, so skip it entirely
 			return null;
 		}
-		if (transaction.Ledger === '') {
-			transaction.Ledger = parseFloat(transaction.Amount) > 0 ? 'Income' : 'Unknown';
-		}
-		transaction.Date = transaction.Date ? moment.utc(transaction.Date, 'YYYY-MM-DD') : moment.invalid();
-		return transaction;
+
+		return {
+			Date: normalizeDate(transaction),
+			Amount: transaction.Amount,
+			Ledger: normalizeLedger(transaction),
+			Company: transaction.Company
+		};
 	}).filter(Boolean); // drop invalid
+}
+
+function normalizeDate(transaction) {
+	return transaction.Date ? moment.utc(transaction.Date, 'YYYY-MM-DD') : moment.invalid();
+}
+
+function normalizeLedger(transaction) {
+	if (!transaction.Ledger) {
+		return parseFloat(transaction.Amount) > 0 ? 'Income' : 'Unknown';
+	}
+	return transaction.Ledger.replace(/ Expense$/i, '');
 }

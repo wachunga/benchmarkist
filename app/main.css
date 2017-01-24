@@ -60,13 +60,22 @@ body {
 	background-image: linear-gradient(to bottom, #f6f6f6, #fafafa); /* mock has subtle gradient */
 }
 
-.sum-table td:nth-child(1), /* date and account columns */
-.sum-table td:nth-child(3) {
-	color: #8C8981;
+/* date and account columns */
+.transactions .sum-table td:nth-child(1),
+.transactions .sum-table td:nth-child(3) {
+	color: #8C8981 !important;
 }
 
-.sum-table .row-income td {
+.transactions .row-income td {
 	color: #098B8C;
+}
+
+.expenses .col-category {
+	width: 70%;
+}
+
+.expenses tbody td {
+	vertical-align: top;
 }
 
 .expenses summary {

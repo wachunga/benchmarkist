@@ -13,9 +13,21 @@
 
 		<section class="expenses">
 			<h1 class="section-header" id="expenses">Expenses <span class="expense-count"></span></h1>
-			<div class="expenses-breakdown">
-				Loading...
-			</div>
+			<table class="sum-table">
+				<colgroup>
+					<col class="col-category">
+				</colgroup>
+				<thead>
+					<th>Category</th>
+					<th>Total</th>
+					<th>Percent</th>
+				</thead>
+				<tbody class="expenses-table-body">
+					<tr>
+						<td colspan="3">Loading...</td>
+					</tr>
+				</tbody>
+			</table>
 		</section>
 
 		<section class="transactions">
@@ -25,9 +37,9 @@
 					<th>Date</th>
 					<th>Company</th>
 					<th>Account</th>
-					<th class="sum-table-total"></th>
+					<th class="transaction-table-total"></th>
 				</thead>
-				<tbody>
+				<tbody class="transaction-table-body">
 					<tr>
 						<td colspan="4">Loading...</td>
 					</tr>
@@ -38,7 +50,7 @@
 
 <script>
 
-	const expensesSummaryElement = document.querySelector('.expenses-breakdown');
+	const expensesSummaryElement = document.querySelector('.expenses-table-body');
 
 	fetchExpenses().then(showExpenses);
 
@@ -58,10 +70,16 @@
 			return `<li>${transaction.Date} ${transaction.Company} ${transaction.Amount}</li>`;
 		}).join('\n');
 		return `
-<details>
-	<summary>${expense.categoryKey} ${expense.total}</summary>
-	<ul>${transactions}</ul>
-</details>`;
+<tr>
+	<td>
+		<details>
+			<summary>${expense.categoryKey}</summary>
+			<ul>${transactions}</ul>
+		</details>
+	</td>
+	<td>${expense.total}</td>
+	<td></td>
+</tr>`;
 	}
 
 </script>
@@ -72,8 +90,8 @@
 	}
 
 	const transactionCountElement = document.querySelector('.transaction-count');
-	const transactionTableBodyElement = document.querySelector('.sum-table tbody');
-	const transactionTotalElement = document.querySelector('.sum-table-total');
+	const transactionTableBodyElement = document.querySelector('.transaction-table-body');
+	const transactionTotalElement = document.querySelector('.transaction-table-total');
 
 	fetchTransactions().then(addResults);
 

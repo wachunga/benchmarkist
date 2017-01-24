@@ -41,7 +41,7 @@ describe('expenseService', () => {
 				totalCount: 4,
 				transactions: [
 					mockTransaction('-100', 'Web Hosting'),
-					mockTransaction('-100', 'Travel Expense'),
+					mockTransaction('-100', 'Travel'),
 					mockTransaction('-100', 'Business Meals'),
 					mockTransaction('-100', 'Web Hosting'),
 				]
@@ -80,14 +80,14 @@ describe('expenseService', () => {
 				totalCount: 4,
 				transactions: [
 					mockTransaction('-100', 'Web Hosting'),
-					mockTransaction('-100.25', 'Travel Expense')
+					mockTransaction('-100.25', 'Travel')
 				]
 			})
 			.get('/transactions/2.json')
 			.reply(200, {
 				totalCount: 3,
 				transactions: [
-					mockTransaction('-200.50', 'Travel Expense'),
+					mockTransaction('-200.50', 'Travel'),
 					mockTransaction('-100', 'Web Hosting')
 				]
 			});
@@ -97,7 +97,7 @@ describe('expenseService', () => {
 
 			const hosting = categories.find(category => category.categoryKey === 'Web Hosting');
 			assert.equal(hosting.total, '($200)');
-			const travel = categories.find(category => category.categoryKey === 'Travel Expense');
+			const travel = categories.find(category => category.categoryKey === 'Travel');
 			assert.equal(travel.total, '($300.75)');
 		});
 	});
@@ -108,7 +108,7 @@ describe('expenseService', () => {
 			.reply(200, {
 				totalCount: 3,
 				transactions: [
-					mockTransaction('-200.25', 'Travel Expense'),
+					mockTransaction('-200.25', 'Travel'),
 					mockTransaction('-100', 'Web Hosting'),
 					mockTransaction('-200', 'Equipment')
 				]
@@ -116,7 +116,7 @@ describe('expenseService', () => {
 
 		return expenseService.listExpenseCategories().then(categories => {
 			const sortedCategoryKeys = categories.map(category => category.categoryKey);
-			assert.deepEqual(sortedCategoryKeys, ['Travel Expense', 'Equipment', 'Web Hosting']);
+			assert.deepEqual(sortedCategoryKeys, ['Travel', 'Equipment', 'Web Hosting']);
 		});
 	});
 });
