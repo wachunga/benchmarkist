@@ -66,11 +66,13 @@ body {
 	background-image: linear-gradient(to bottom, #f6f6f6, #fafafa); /* mock has subtle gradient */
 }
 
-/* total column */
+/* total and percent columns */
 .transactions .sum-table th:nth-child(4),
 .transactions .sum-table td:nth-child(4),
 .expenses .sum-table th:nth-child(2),
 .expenses .sum-table td:nth-child(2),
+.expenses .sum-table td:nth-child(3),
+.expenses .sum-table th:nth-child(3),
 .expense-details-table td:nth-child(3) {
 	text-align: right;
 }

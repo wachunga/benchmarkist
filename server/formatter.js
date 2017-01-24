@@ -5,9 +5,14 @@ const numeral = require('numeral');
 const formatter = module.exports = {};
 
 const asCurrencyWithThousandsSeparator = '($0,0[.]00)';
+const asPercentage = '0[.]0%';
 
 formatter.formatCurrency = function (amount) {
 	return numeral(amount).format(asCurrencyWithThousandsSeparator);
+};
+formatter.formatPercentage = function (amount) {
+	console.log(typeof amount, amount);
+	return numeral(amount).format(asPercentage);
 };
 
 formatter.formatTransaction = function (transaction) {

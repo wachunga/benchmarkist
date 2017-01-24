@@ -23,6 +23,6 @@
 		}).join('\n');
 		const detailsTable = `<table class="expense-details-table"><tbody>${detailsTableRows}</tbody></table>`;
 		const detailsElement = `<details><summary>${expense.categoryKey}</summary>${detailsTable}</details>`;
-		return `<tr><td>${detailsElement}</td><td>${expense.total}</td><td></td></tr>`;
+		return `<tr><td>${detailsElement}</td><td>${expense.total}</td><td>${expense.percent}</td></tr>`;
 	}
 }());

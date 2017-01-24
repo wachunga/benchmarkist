@@ -5,7 +5,7 @@ const nock = require('nock');
 const mockTransaction = require('./testHelper').mockTransaction;
 const transactionClient = require('../server/transactionApiClient');
 
-describe('transactionClient', () => {
+describe('transactionApiClient', () => {
 	function mockTransactions(count) {
 		return new Array(count).fill(mockTransaction());
 	}
