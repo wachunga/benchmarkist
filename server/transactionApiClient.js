@@ -3,6 +3,7 @@
 const request = require('got');
 const Promise = require('bluebird');
 const moment = require('moment');
+const cache = require('./cache');
 
 const transactionApiClient = module.exports = {};
 
@@ -19,14 +20,18 @@ function getTransactionsUrl(page = 1) {
 
 transactionApiClient.fetchTransactionsPage = function (page) {
 	const pageUrl = getTransactionsUrl(page);
-	return request(pageUrl, requestOptions);
+	return cache.cached(pageUrl, () => {
+		return request(pageUrl, requestOptions).then(response => response.body);
+	});
 };
 
 transactionApiClient.fetchAllTransactions = function () {
-	return transactionApiClient.fetchTransactionsPage(1).then(pageOneResponse => {
+	const fetchPage = transactionApiClient.fetchTransactionsPage;
+
+	return fetchPage(1).then(pageOneResponse => {
 		const additionalPages = remainingPages(pageOneResponse);
 		return Promise
-			.map(additionalPages, page => request(getTransactionsUrl(page), requestOptions), { concurrency: maxConcurrency })
+			.map(additionalPages, fetchPage, { concurrency: maxConcurrency })
 			.then(additionalResponses => {
 				return [pageOneResponse, ...additionalResponses]
 					.map(normalizeResponse)
@@ -37,8 +42,8 @@ transactionApiClient.fetchAllTransactions = function () {
 	});
 };
 
-function remainingPages(response) {
-	const finalPage = Math.ceil(response.body.totalCount / response.body.transactions.length);
+function remainingPages(result) {
+	const finalPage = Math.ceil(result.totalCount / result.transactions.length);
 	return range(2, finalPage);
 }
 
@@ -50,9 +55,8 @@ function range(start = 1, end) {
 	return ranged;
 }
 
-function normalizeResponse(response) {
-	const transactions = response.body.transactions;
-	return transactions.map(transaction => {
+function normalizeResponse(result) {
+	return result.transactions.map(transaction => {
 		if (!Number.isFinite(parseFloat(transaction.Amount))) {
 			console.warn('Skipping transaction due to invalid amount', JSON.stringify(transaction));
 			// treating it as 0 could be misleading, so skip it entirely

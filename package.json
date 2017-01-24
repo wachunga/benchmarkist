@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node index.js",
     "lint": "eslint .",
-    "test": "npm run lint && mocha --recursive",
+    "test": "npm run lint && mocha --recursive --require test/setup",
     "test-only": "mocha --recursive"
   },
   "repository": {

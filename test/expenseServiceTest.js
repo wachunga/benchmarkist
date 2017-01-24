@@ -153,7 +153,6 @@ describe('expenseService', () => {
 
 			return expenseService.listExpenseCategories({ formatted: true, benchmark: true }).then(categories => {
 				const benchmarks = categories.map(category => category.benchmark).map(Boolean);
-				console.log(benchmarks);
 				assert(benchmarks.length, 3);
 			});
 		});
