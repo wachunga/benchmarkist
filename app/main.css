@@ -68,3 +68,7 @@ body {
 .sum-table .row-income td {
 	color: #098B8C;
 }
+
+.expenses summary {
+	cursor: pointer;
+}

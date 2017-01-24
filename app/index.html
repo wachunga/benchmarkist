@@ -10,21 +10,61 @@
 		<div>Bench Test</div>
 	</nav>
 	<div class="container">
-		<h1 class="section-header">Transactions <span class="transaction-count"></span></h1>
-		<table class="sum-table">
-			<thead>
-				<th>Date</th>
-				<th>Company</th>
-				<th>Account</th>
-				<th class="sum-table-total"></th>
-			</thead>
-			<tbody>
-				<tr>
-					<td colspan="4">Loading...</td>
-				</tr>
-			</tbody>
-		</table>
+
+		<section class="expenses">
+			<h1 class="section-header" id="expenses">Expenses <span class="expense-count"></span></h1>
+			<div class="expenses-breakdown">
+				Loading...
+			</div>
+		</section>
+
+		<section class="transactions">
+			<h1 class="section-header" id="transactions">Transactions <span class="transaction-count"></span></h1>
+			<table class="sum-table">
+				<thead>
+					<th>Date</th>
+					<th>Company</th>
+					<th>Account</th>
+					<th class="sum-table-total"></th>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="4">Loading...</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
 	</div>
+
+<script>
+
+	const expensesSummaryElement = document.querySelector('.expenses-breakdown');
+
+	fetchExpenses().then(showExpenses);
+
+	function fetchExpenses() {
+		return fetch('/a/1/expenses?formatted=true&readable=true&dedupe=true')
+			.then(function (response) {
+				return response.json();
+			});
+	}
+
+	function showExpenses(results) {
+		expensesSummaryElement.innerHTML = results.map(buildExpenseEntry).join('\n')
+	}
+
+	function buildExpenseEntry(expense) {
+		const transactions = expense.transactions.map(transaction => {
+			return `<li>${transaction.Date} ${transaction.Company} ${transaction.Amount}</li>`;
+		}).join('\n');
+		return `
+<details>
+	<summary>${expense.categoryKey} ${expense.total}</summary>
+	<ul>${transactions}</ul>
+</details>`;
+	}
+
+</script>
 
 <script>
 	if (!fetch) {
@@ -47,17 +87,20 @@
 	function addResults(results) {
 		transactionTotalElement.innerText = results.totalBalance;
 		transactionCountElement.innerText = `(${results.transactions.length})`;
-		transactionTableBodyElement.innerHTML = results.transactions.map(result => {
-			const rowClass = 'row-' + result.Ledger.toLowerCase();
-			return `
+		transactionTableBodyElement.innerHTML = results.transactions.map(makeTransactionTableRow).join('\n');
+	}
+
+	function makeTransactionTableRow(result) {
+		const rowClass = 'row-' + result.Ledger.toLowerCase();
+		return `
 <tr class="${rowClass}">
 	<td>${result.Date}</td>
 	<td>${result.Company}</td>
 	<td>${result.Ledger}</td>
 	<td>${result.Amount}</td>
 </tr>`;
-		}).join('\n');
 	}
+
 </script>
 </body>
 </html>
