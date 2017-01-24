@@ -7,10 +7,18 @@
 
 	const expensesSummaryElement = document.querySelector('.expenses-table-body');
 
-	fetchExpenses().then(showExpenses);
+	fetchExpenses().then(showExpenses).catch(err => {
+		console.error(err);
+		document.querySelector('.expenses-table-body td').innerText = 'Failed to fetch expenses';
+	});
 
 	function fetchExpenses() {
-		return fetch('/a/1/expenses?formatted=true&dedupe=true&benchmark=true').then(response => response.json());
+		return fetch('/a/1/expenses?formatted=true&dedupe=true&benchmark=true').then(response => {
+			if (!response.ok) {
+				throw new Error(`fetch failed with status ${response.status}: ${response.statusText}`);
+			}
+			return response.json();
+		});
 	}
 
 	function showExpenses(results) {

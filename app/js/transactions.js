@@ -10,10 +10,18 @@
 	const transactionTableBodyElement = document.querySelector('.transaction-table-body');
 	const transactionTotalElement = document.querySelector('.transaction-table-total');
 
-	fetchTransactions().then(addResults);
+	fetchTransactions().then(addResults).catch(err => {
+		console.error(err);
+		document.querySelector('.transaction-table-body td').innerText = 'Failed to fetch transactions';
+	});
 
 	function fetchTransactions() {
-		return fetch('/a/1/transactions?formatted=true&dedupe=true').then(response => response.json());
+		return fetch('/a/1/transactions?formatted=true&dedupe=true').then(response => {
+			if (!response.ok) {
+				throw new Error(`fetch failed with status ${response.status}: ${response.statusText}`);
+			}
+			return response.json();
+		});
 	}
 
 	function addResults(results) {
