@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-	if (!fetch) {
-		alert('Your browser is not supported. Please use an evergreen browser like Chrome or Firefox.');
+	if (!window.fetch) {
+		showError('Your browser is not supported. Please use an evergreen browser like Chrome or Firefox.');
 		return;
 	}
 
@@ -12,11 +12,15 @@
 
 	fetchTransactions().then(addResults).catch(err => {
 		console.error(err);
-		document.querySelector('.transaction-table-body td').innerText = 'Failed to fetch transactions';
+		showError('Failed to fetch transactions');
 	});
 
+	function showError(message) {
+		document.querySelector('.transaction-table-body td').innerText = message;
+	}
+
 	function fetchTransactions() {
-		return fetch('/a/1/transactions?formatted=true&dedupe=true').then(response => {
+		return window.fetch('/a/1/transactions?formatted=true&dedupe=true').then(response => {
 			if (!response.ok) {
 				throw new Error(`fetch failed with status ${response.status}: ${response.statusText}`);
 			}

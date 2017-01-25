@@ -6,12 +6,12 @@
 	<link rel="stylesheet" href="main.css">
 </head>
 <body>
-	<nav class="main-nav">
-		<div>Benchmarkist</div>
-	</nav>
+	<header class="main-header">
+		<h1>Benchmarkist</h1>
+	</header>
 	<div class="container">
 		<section class="transactions">
-			<h1 class="section-header" id="transactions">Transactions <span class="transaction-count"></span></h1>
+			<h2 class="section-header" id="transactions">Transactions <span class="transaction-count"></span></h2>
 			<table class="sum-table">
 				<thead>
 					<th>Date</th>
@@ -21,14 +21,14 @@
 				</thead>
 				<tbody class="transaction-table-body">
 					<tr>
-						<td colspan="4">Loading...</td>
+						<td colspan="4" class="loading">Loading...</td>
 					</tr>
 				</tbody>
 			</table>
 		</section>
 
 		<section class="expenses">
-			<h1 class="section-header" id="expenses">Expenses <span class="expense-count"></span></h1>
+			<h2 class="section-header" id="expenses">Expenses <span class="expense-count"></span></h2>
 			<table class="sum-table">
 				<colgroup>
 					<col class="col-category">
@@ -41,7 +41,7 @@
 				</thead>
 				<tbody class="expenses-table-body">
 					<tr>
-						<td colspan="4">Loading...</td>
+						<td colspan="4" class="loading">Loading...</td>
 					</tr>
 				</tbody>
 			</table>

@@ -19,17 +19,21 @@ a {
 	border-bottom: 1px solid;
 }
 
-:target {
+tr:target {
 	background-color: #D2A764;
 	color: white;
 }
 
-.main-nav {
+.main-header {
 	line-height: 6rem;
 	color: white;
 	background-color: #098B8C;
 	text-align: center;
+}
+.main-header h1 {
+	font-size: 1.6rem;
 	font-weight: 500;
+	margin: 0;
 }
 
 .container {
@@ -97,11 +101,12 @@ a {
 
 /* date and account columns */
 .transactions .sum-table td:nth-child(1),
-.transactions .sum-table td:nth-child(3) {
+.transactions .sum-table td:nth-child(3),
+.loading {
 	color: #8C8981;
 }
 
-.transactions .row-income td {
+.transactions .sum-table .row-income td {
 	color: #098B8C;
 }
 
