@@ -36,13 +36,21 @@
 
 	function makeTransactionTableRow(result) {
 		const rowClass = `row-${result.Ledger.toLowerCase()}`;
-		const link = `#category-${result.Ledger.toLowerCase().split(/\W/)[0]}`;
-		return `
-	<tr class="${rowClass}">
-		<td>${result.Date}</td>
-		<td>${result.Company}</td>
-		<td><a href="${link}">${result.Ledger}</a></td>
-		<td>${result.Amount}</td>
-	</tr>`;
+		const account = buildAccountCell(result);
+		return `<tr class="${rowClass}">
+					<td>${result.Date}</td>
+					<td>${result.Company}</td>
+					<td>${account}</td>
+					<td>${result.Amount}</td>
+				</tr>`;
+	}
+
+	function buildAccountCell(result) {
+		if (!result.Ledger || result.Ledger === 'Income') {
+			return result.Ledger;
+		}
+
+		const simplifiedCategoryKey = result.Ledger.toLowerCase().split(/\W/)[0];
+		return `<a href="#category-${simplifiedCategoryKey}">${result.Ledger}</a>`;
 	}
 }());

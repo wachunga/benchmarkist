@@ -1,7 +1,7 @@
 {
   "name": "benchmarkist",
   "version": "0.2.0",
-  "description": "transaction and expense management app",
+  "description": "Transaction and expense app for small businesses",
   "main": "index.js",
   "engines": {
     "node": ">= 6"
@@ -10,8 +10,8 @@
   "scripts": {
     "start": "node index.js",
     "lint": "eslint .",
-    "test": "npm run lint && mocha --recursive --require test/setup",
-    "test-only": "mocha --recursive"
+    "test": "npm run lint && npm run test-only",
+    "test-only": "mocha --recursive --require test/setup"
   },
   "repository": {
     "type": "git",
